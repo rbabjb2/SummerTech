@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Random;
-import java.awt.GridLayout;
+import java.awt.GridLayout; 
 import java.awt.event.*;
 
 public class Minesweeper extends JFrame implements KeyListener, MouseListener, ActionListener {
@@ -134,13 +134,6 @@ public class Minesweeper extends JFrame implements KeyListener, MouseListener, A
         frame.validate();
         frame.repaint();
 
-        System.out.println();
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                System.out.print(storage[x][y]);
-            }
-            System.out.println();
-        }
     }
 
     public static void main(String[] args) {
