@@ -1,11 +1,10 @@
-import javax.swing.*;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.Random;
 import java.awt.GridLayout; 
 import java.awt.event.*;
+import java.util.Random;
+import javax.swing.*;
 
 public class Minesweeper extends JFrame implements KeyListener, MouseListener, ActionListener {
     int mineNum;
@@ -42,9 +41,16 @@ public class Minesweeper extends JFrame implements KeyListener, MouseListener, A
         startPanel.setLayout(box);
         gameLabel.setPreferredSize(new Dimension(400, 300));
         gameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        gameLabel.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 50));
+        gameLabel.setFont(new Font(Font.SERIF, Font.BOLD, 60));
         startPanel.add(new Box.Filler(new Dimension(25, 50), new Dimension(150, 25), new Dimension(200, 35)));
         startPanel.add(gameLabel);
+
+        JPanel creditPanel = new JPanel();
+        JLabel creditLabel = new JLabel("Made by Arlo dev INC.");
+        creditLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        creditPanel.add(creditLabel);
+        startPanel.add(creditPanel);
+        startPanel.add(new Box.Filler(new Dimension(15, 35), new Dimension(150, 40), new Dimension(200, 60)));
 
         JPanel sizePanel = new JPanel();
         JLabel sizeLabel = new JLabel("Size:");
