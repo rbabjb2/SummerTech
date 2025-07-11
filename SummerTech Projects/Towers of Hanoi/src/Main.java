@@ -6,34 +6,95 @@ public class Main {
     ArrayList<Integer> center = new ArrayList<Integer>();
     int towerHeight = 7;
 
+    public void solve(ArrayList<Integer> goal, ArrayList<Integer> start, ArrayList<Integer> other, int moveNum, int height) {
+        if (moveNum == 0) {
+            move(goal, start);
+            solve(other, start, goal, moveNum + 1, height);
+        } else if (moveNum == height) {
+            System.out.println(left);
+            System.out.println(center);
+            System.out.println(right);
+        } else {
+            move(goal, start);
+            solve(goal, other, start, 0, moveNum);
+            solve(other, start, goal, moveNum + 1,towerHeight);
+        }
+    }
+
     public Main() {
         for (int i = 0; i < towerHeight; i++) {
             left.add(i);
         }
+        solve(right, left, center, 0, towerHeight);
+        /*
+         * moveTop2(center, left, right);
+         * 
+         * move(right, left);
+         * 
+         * moveTop2(right, center, left);
+         * // Green
+         * 
+         * move(center, left);
+         * 
+         * moveTop2(left, right, center);
+         * 
+         * move(center, right);
+         * 
+         * moveTop2(center, left, right);
+         * // Light Blue
+         * 
+         * move(right, left);
+         * // Bring in next piece
+         * 
+         * // Dark Blue
+         * 
+         * moveTop2(right, center, left);
+         * 
+         * move(left, center);
+         * 
+         * moveTop2(left, right, center);
+         * 
+         * move(right, center);
+         * 
+         * moveTop2(center, left, right);
+         * 
+         * move(right, left);
+         * 
+         * moveTop2(right, center, left);
+         * move(center, left);
+         * // Bring in next piece
+         * 
+         * // Purple
+         * moveTop2(left, right, center);
+         * 
+         * move(center, right);
+         * 
+         * moveTop2(center, left, right);
+         * 
+         * move(left, right);
+         * 
+         * moveTop2(right, center, left);
+         * 
+         * move(left, center);
+         * 
+         * moveTop2(left, right, center);
+         * move(center, right);
+         * 
+         * moveTop2(center, left, right);
+         * 
+         * move(right, left);
+         * 
+         * moveTop2(right, center, left);
+         * 
+         * move(center, left);
+         * 
+         * moveTop2(left, right, center);
+         * 
+         * move(center, right);
+         * 
+         * moveTop2(center, left, right);
+         */
 
-
-        moveTop2(center, left, right);
-
-        move(right, left);
-        //Green 
-        moveTop2(right, center, left);
-
-        move(center, left);
-        //Light Blue
-
-        moveTop2(left, right, center);
-
-        move(center, right);
-
-        moveTop2(center, left, right);
-
-        move();
-        // Dark Blue
-        mo
-
-        System.out.println(left);
-        System.out.println(center);
-        System.out.println(right);
     }
 
     public static void main(String[] args) {
