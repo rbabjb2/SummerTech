@@ -2,14 +2,10 @@ import java.util.Random;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
+import java.awt.image.*;
 
 @SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
-    static JFrame frame = new JFrame("MAZE!!!!!!!!!!!!!!!!!!!!!!!!!");
-    static JPanel panel = new JPanel();
-    static JLabel label = new JLabel("Generic Text");
     static Random random = new Random();
     static int gridSize = 31;
     private static int maze[][] = new int[gridSize][gridSize];
@@ -23,30 +19,32 @@ public class Maze extends JFrame implements Runnable {
     public Screen screen;
 
     public Maze() {
-        image = new BufferedImage(700, 500, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(gridSize * 10, gridSize * 10, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
         textures.add(Texture.brick);
         screen = new Screen();
-        frame.addKeyListener(camera);
-        frame.setFocusable(true);
-        frame.requestFocus();
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                maze[j][i] = 1;
+                maze[j][i] = 0;
+                if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) {
+                    maze[i][j] = 1;
+                }
             }
 
         }
         maze[gridSize - 2][gridSize - 1] = 0;
-        generateMaze(1, 1);
+        // generateMaze(1, 1);
         camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
-        frame.setSize(700, 500);
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-        panel.setBackground(color);
-        frame.setVisible(true);
-        panel.add(label);
-        frame.add(panel);
+        addKeyListener(camera);
+        setSize(gridSize * 10, gridSize * 10);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setBackground(color);
+        setTitle("Maze 2.0");
+        setLocationRelativeTo(null);
+        setVisible(true);
         start();
     }
 
@@ -100,6 +98,7 @@ public class Maze extends JFrame implements Runnable {
     }
 
     public void run() {
+        requestFocus();
         double delta = 0;
         long startTime = System.nanoTime();
         final double frameRate = 1000000000.0 / 60.0;
@@ -110,9 +109,7 @@ public class Maze extends JFrame implements Runnable {
             delta += ((nanoTime - startTime) / frameRate);
             startTime = nanoTime;
             while (delta >= 1) {
-                delta--;
                 color = new Color(red, 0, 255);
-                panel.setBackground(color);
 
                 if (red == 0) {
                     redBig = false;
@@ -126,8 +123,16 @@ public class Maze extends JFrame implements Runnable {
                 } else {
                     red++;
                 }
+                for (int i = 0; i < pixels.length; i++) {
+                    pixels[i] = Color.RED.getRGB();
+                    if (pixels[i] != Color.RED.getRGB()) {
+                        System.out.println("pixels[i] != Color.RED.getRGB()");
+                    }
+                }
+                delta--;
             }
         }
+        render();
     }
 
     private synchronized void start() {
@@ -142,5 +147,16 @@ public class Maze extends JFrame implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void render() {
+        BufferStrategy bufferStrat = getBufferStrategy();
+        if (bufferStrat == null) {
+            createBufferStrategy(3);
+            return;
+        }
+        Graphics graphic = bufferStrat.getDrawGraphics();
+        graphic.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+        bufferStrat.show();
     }
 }
