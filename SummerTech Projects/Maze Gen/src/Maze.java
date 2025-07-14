@@ -31,17 +31,19 @@ public class Maze extends JFrame implements Runnable {
                 if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) {
                     maze[i][j] = 1;
                 }
+                System.out.print(maze[i][j]);
             }
+            System.out.println();
 
         }
         maze[gridSize - 2][gridSize - 1] = 0;
         // generateMaze(1, 1);
         camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
         addKeyListener(camera);
-        setSize(gridSize * 10, gridSize * 10);
+        setSize(gridSize * 20, gridSize * 20);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setBackground(color);
+        setBackground(Color.PINK);
         setTitle("Maze 2.0");
         setLocationRelativeTo(null);
         setVisible(true);
@@ -98,6 +100,7 @@ public class Maze extends JFrame implements Runnable {
     }
 
     public void run() {
+        System.out.println("Called method: run");
         requestFocus();
         double delta = 0;
         long startTime = System.nanoTime();
@@ -123,16 +126,23 @@ public class Maze extends JFrame implements Runnable {
                 } else {
                     red++;
                 }
-                for (int i = 0; i < pixels.length; i++) {
-                    pixels[i] = Color.RED.getRGB();
-                    if (pixels[i] != Color.RED.getRGB()) {
-                        System.out.println("pixels[i] != Color.RED.getRGB()");
+                for (int i = 0; i < image.getHeight(); i++) {
+
+                    for (int j = 0; j < image.getWidth(); j++) {
+                        if (maze[i / 10][j / 10] == 1) {
+                            pixels[j + (i * image.getHeight())] = Color.WHITE.getRGB();
+                        } else {
+                            pixels[j + (i * image.getHeight())] = Color.BLACK.getRGB();
+                        }
+                        System.out.print(maze[i / 10][j / 10]);
                     }
+                    System.out.println();
+
                 }
                 delta--;
             }
+            render();
         }
-        render();
     }
 
     private synchronized void start() {
@@ -156,7 +166,7 @@ public class Maze extends JFrame implements Runnable {
             return;
         }
         Graphics graphic = bufferStrat.getDrawGraphics();
-        graphic.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+        graphic.drawImage(image, 50, 70, image.getWidth(), image.getHeight(), null);
         bufferStrat.show();
     }
 }
