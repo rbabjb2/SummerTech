@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.awt.image.*;
 
-@SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
+    private static final long serialVersionUID = 1L;
     static Random random = new Random();
     static int gridSize = 45;
     private static int maze[][] = new int[gridSize][gridSize];
@@ -23,15 +23,15 @@ public class Maze extends JFrame implements Runnable {
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
-        textures.add(Texture.brick);
+        textures.add(Texture.wood);
         screen = new Screen(maze, textures, 640, 480, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                maze[i][j] = 1;
+                maze[j][i] = 1;
             }
 
         }
-        maze[gridSize - 2][gridSize - 1] = 0;
+        maze[gridSize - 1][gridSize - 2] = 0;
         generateMaze(1, 1);
         printScreen();
         camera = new Camera(1.5, 1.5, 0, -1, 0, -0.66, maze);
@@ -47,7 +47,7 @@ public class Maze extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        Maze Maze = new Maze();
+        new Maze();
     }
 
     private static void shuffleArray(int[] array) {
@@ -62,7 +62,7 @@ public class Maze extends JFrame implements Runnable {
 
     public static void generateMaze(int row, int col) {
         System.out.println("Called method: generateMaze");
-        maze[row][col] = 0;
+        maze[col][row] = 0;
         int[] directions = { 0, 1, 2, 3 };
         shuffleArray(directions);
         for (int direction : directions) {
@@ -81,7 +81,7 @@ public class Maze extends JFrame implements Runnable {
                 newCol += 2;
             }
             if (newRow > 0 && newRow < gridSize - 1 && newCol > 0 && newCol < gridSize - 1
-                    && (maze[newRow][newCol] == 1)) {
+                    && (maze[newCol][newRow] == 1)) {
                 maze[row + (newRow - row) / 2][col + (newCol - col) / 2] = 0;
                 generateMaze(newRow, newCol);
             }
@@ -91,7 +91,7 @@ public class Maze extends JFrame implements Runnable {
     public static void printScreen() {
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
-                System.out.print(maze[y][x]);
+                System.out.print(maze[x][y]);
             }
             System.out.println();
         }
