@@ -3,7 +3,8 @@ import java.awt.event.*;
 public class Camera implements KeyListener {
     public double posX, posY, dirY, dirX, planeY, planeX;
     public boolean left, right, forward, back;
-    public final double MOVE_SPEED = 0.08;
+    public final double MOVE_SPEED = 0.12;
+    // Move speed was 0.08
     public final double ROTATION_SPEED = 0.045;
     public int[][] map;
 
@@ -33,18 +34,23 @@ public class Camera implements KeyListener {
             dirX = dirX * Math.cos(ROTATION_SPEED) - dirY * Math.sin(ROTATION_SPEED);
             dirY = oldDirX * Math.sin(ROTATION_SPEED) + dirY * Math.cos(ROTATION_SPEED);
             double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(ROTATION_SPEED) - planeY * Math.sin(ROTATION_SPEED);
-            planeY = oldPlaneX * Math.sin(ROTATION_SPEED) + planeY * Math.cos(ROTATION_SPEED);
+            planeX = planeX * Math.cos(ROTATION_SPEED) - planeY *
+                    Math.sin(ROTATION_SPEED);
+            planeY = oldPlaneX * Math.sin(ROTATION_SPEED) + planeY *
+                    Math.cos(ROTATION_SPEED);
 
         }
 
         if (right) {
             double oldDirX = dirX;
             dirX = dirX * Math.cos(-ROTATION_SPEED) - dirY * Math.sin(-ROTATION_SPEED);
-            dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY * Math.cos(-ROTATION_SPEED);
+            dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY *
+                    Math.cos(-ROTATION_SPEED);
             double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(-ROTATION_SPEED) - planeY * Math.sin(-ROTATION_SPEED);
-            planeY = oldPlaneX * Math.sin(-ROTATION_SPEED) + planeY * Math.cos(-ROTATION_SPEED);
+            planeX = planeX * Math.cos(-ROTATION_SPEED) - planeY *
+                    Math.sin(-ROTATION_SPEED);
+            planeY = oldPlaneX * Math.sin(-ROTATION_SPEED) + planeY *
+                    Math.cos(-ROTATION_SPEED);
         }
 
         if (back) {
@@ -55,6 +61,10 @@ public class Camera implements KeyListener {
                 posY -= dirY * MOVE_SPEED;
             }
         }
+    }
+
+    public void moveUp() {
+        posY -= 0.1;
     }
 
     @Override
@@ -71,6 +81,7 @@ public class Camera implements KeyListener {
                 back = true;
                 break;
             case KeyEvent.VK_A:
+
                 left = true;
                 break;
             case KeyEvent.VK_D:

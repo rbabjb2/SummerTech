@@ -7,7 +7,7 @@ import java.awt.image.*;
 @SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
     static Random random = new Random();
-    static int gridSize = 31;
+    static int gridSize = 45;
     private static int maze[][] = new int[gridSize][gridSize];
     private Thread thread;
     private boolean isRunning;
@@ -19,28 +19,24 @@ public class Maze extends JFrame implements Runnable {
     public Screen screen;
 
     public Maze() {
-        image = new BufferedImage(gridSize * 10, gridSize * 10, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
         textures.add(Texture.brick);
-        screen = new Screen();
+        screen = new Screen(maze, textures, 640, 480, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                maze[j][i] = 0;
-                if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) {
-                    maze[i][j] = 1;
-                }
-                System.out.print(maze[i][j]);
+                maze[i][j] = 1;
             }
-            System.out.println();
 
         }
         maze[gridSize - 2][gridSize - 1] = 0;
-        // generateMaze(1, 1);
-        camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
+        generateMaze(1, 1);
+        printScreen();
+        camera = new Camera(1.5, 1.5, 0, -1, 0, -0.66, maze);
         addKeyListener(camera);
-        setSize(gridSize * 20, gridSize * 20);
+        setSize(640, 480);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBackground(Color.PINK);
@@ -61,9 +57,11 @@ public class Maze extends JFrame implements Runnable {
             array[index] = array[i];
             array[i] = temp;
         }
+        System.out.println("Shuffled array.");
     }
 
     public static void generateMaze(int row, int col) {
+        System.out.println("Called method: generateMaze");
         maze[row][col] = 0;
         int[] directions = { 0, 1, 2, 3 };
         shuffleArray(directions);
@@ -105,40 +103,13 @@ public class Maze extends JFrame implements Runnable {
         double delta = 0;
         long startTime = System.nanoTime();
         final double frameRate = 1000000000.0 / 60.0;
-        int red = 255;
-        boolean redBig = true;
         while (isRunning) {
             long nanoTime = System.nanoTime();
             delta += ((nanoTime - startTime) / frameRate);
             startTime = nanoTime;
             while (delta >= 1) {
-                color = new Color(red, 0, 255);
-
-                if (red == 0) {
-                    redBig = false;
-                    red++;
-                } else if (red == 255) {
-                    redBig = true;
-                    red--;
-                }
-                if (redBig == true) {
-                    red--;
-                } else {
-                    red++;
-                }
-                for (int i = 0; i < image.getHeight(); i++) {
-
-                    for (int j = 0; j < image.getWidth(); j++) {
-                        if (maze[i / 10][j / 10] == 1) {
-                            pixels[j + (i * image.getHeight())] = Color.WHITE.getRGB();
-                        } else {
-                            pixels[j + (i * image.getHeight())] = Color.BLACK.getRGB();
-                        }
-                        System.out.print(maze[i / 10][j / 10]);
-                    }
-                    System.out.println();
-
-                }
+                camera.update();
+                screen.update(camera, pixels);
                 delta--;
             }
             render();
@@ -166,7 +137,7 @@ public class Maze extends JFrame implements Runnable {
             return;
         }
         Graphics graphic = bufferStrat.getDrawGraphics();
-        graphic.drawImage(image, 50, 70, image.getWidth(), image.getHeight(), null);
+        graphic.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         bufferStrat.show();
     }
 }
